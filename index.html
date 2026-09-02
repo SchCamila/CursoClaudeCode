@@ -7,12 +7,22 @@
 <style>
   :root {
     color-scheme: dark;
+    --accent: #7be07b;
+    --accent-dim: #2e7d32;
+    --bg: #10151a;
+    --panel: #161e26;
+    --panel-border: #263340;
+    --text: #e7f0e7;
+    --text-dim: #8fa08f;
+    --warn: #f2c14e;
+    --danger: #e63946;
   }
+  * { box-sizing: border-box; }
   html, body {
     height: 100%;
     margin: 0;
-    background: #10151a;
-    color: #e7f0e7;
+    background: var(--bg);
+    color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   body {
@@ -20,36 +30,185 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    min-height: 100%;
     padding: 16px;
-    box-sizing: border-box;
   }
-  h1 {
+  .screen {
+    display: none;
+    width: 100%;
+    max-width: 460px;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .screen.active { display: flex; }
+
+  /* ---------- Menu ---------- */
+  #logo {
+    font-size: 2.2rem;
+    letter-spacing: 0.08em;
     margin: 0;
-    font-size: 1.5rem;
-    letter-spacing: 0.05em;
+    text-align: center;
+    text-shadow: 0 0 18px rgba(123, 224, 123, 0.5);
   }
-  #scoreboard {
+  #logo span { color: var(--accent); }
+  .subtitle {
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: -8px;
+    font-size: 0.95rem;
+  }
+  .menu-buttons {
     display: flex;
-    gap: 24px;
-    font-size: 1.1rem;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 280px;
   }
-  #scoreboard span {
-    font-weight: 600;
-    color: #7be07b;
+  button {
+    font: inherit;
+    cursor: pointer;
   }
+  .btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+    background: var(--accent-dim);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover { background: #388e3c; }
+  .btn:active { transform: scale(0.97); }
+  .btn.secondary {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+  }
+  .btn.secondary:hover { background: #1c2530; }
+  .btn.small {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  #sound-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
+  #sound-toggle button {
+    background: none;
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+
+  /* ---------- Onboarding ---------- */
+  .onboard-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 24px;
+    width: 100%;
+    text-align: center;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .onboard-icon { font-size: 2.4rem; }
+  .onboard-card h2 { margin: 0; font-size: 1.15rem; }
+  .onboard-card p { margin: 0; color: var(--text-dim); font-size: 0.95rem; line-height: 1.4; }
+  .onboard-dots { display: flex; gap: 6px; }
+  .onboard-dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--panel-border);
+  }
+  .onboard-dots span.active { background: var(--accent); }
+  .onboard-nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+  }
+  .onboard-nav .btn { flex: 1; }
+
+  /* ---------- Level select ---------- */
+  #level-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  .level-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.1s ease;
+  }
+  .level-card:hover:not(.locked) { border-color: var(--accent-dim); transform: translateY(-1px); }
+  .level-card.locked { opacity: 0.5; cursor: not-allowed; }
+  .level-swatch {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .level-info { flex: 1; }
+  .level-info .name { font-weight: 600; }
+  .level-info .desc { font-size: 0.8rem; color: var(--text-dim); }
+  .level-info .best { font-size: 0.75rem; color: var(--accent); margin-top: 2px; }
+  .level-lock { font-size: 1.2rem; color: var(--text-dim); }
+
+  /* ---------- Game ---------- */
+  #hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    font-size: 0.95rem;
+  }
+  #hud .stat span { font-weight: 700; color: var(--accent); }
+  #board-wrap { position: relative; }
   #board {
     background: #0a0e12;
-    border: 4px solid #2e7d32;
+    border: 4px solid var(--level-color, #2e7d32);
     border-radius: 8px;
-    box-shadow: 0 0 24px rgba(46, 125, 50, 0.4);
+    box-shadow: 0 0 24px var(--level-glow, rgba(46, 125, 50, 0.4));
+    display: block;
   }
-  #message {
-    min-height: 1.5em;
-    font-size: 1rem;
-    color: #f2c14e;
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 14, 18, 0.88);
+    border-radius: 4px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     text-align: center;
+    padding: 16px;
   }
+  .overlay.active { display: flex; }
+  .overlay h2 { margin: 0; }
+  .overlay p { margin: 0; color: var(--text-dim); }
   #controls {
     display: flex;
     flex-direction: column;
@@ -65,133 +224,579 @@
   .dpad button {
     font-size: 1.2rem;
     background: #1b2530;
-    color: #e7f0e7;
-    border: 1px solid #2e7d32;
+    color: var(--text);
+    border: 1px solid var(--accent-dim);
     border-radius: 6px;
-    cursor: pointer;
     touch-action: manipulation;
   }
-  .dpad button:active {
-    background: #2e7d32;
-  }
+  .dpad button:active { background: var(--accent-dim); }
   #up { grid-column: 2; grid-row: 1; }
   #left { grid-column: 1; grid-row: 2; }
-  #restart-inline { grid-column: 2; grid-row: 2; font-size: 0.9rem; }
+  #pause-inline { grid-column: 2; grid-row: 2; font-size: 0.9rem; }
   #right { grid-column: 3; grid-row: 2; }
   #down { grid-column: 2; grid-row: 3; }
-  #hint {
-    font-size: 0.85rem;
-    color: #8fa08f;
-    text-align: center;
-  }
-  button#restart {
-    margin-top: 4px;
-    padding: 8px 20px;
-    font-size: 1rem;
-    background: #2e7d32;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  button#restart:hover {
-    background: #388e3c;
+  #hint { font-size: 0.8rem; color: var(--text-dim); text-align: center; }
+  #game-footer {
+    display: flex;
+    gap: 8px;
   }
 </style>
 </head>
 <body>
-  <h1>🐍 SNAKE</h1>
-  <div id="scoreboard">
-    <div>Score: <span id="score">0</span></div>
-    <div>Best: <span id="best">0</span></div>
-  </div>
-  <canvas id="board" width="400" height="400"></canvas>
-  <div id="message"></div>
-  <button id="restart">Restart</button>
-  <div id="controls">
-    <div class="dpad">
-      <button id="up">▲</button>
-      <button id="left">◀</button>
-      <button id="restart-inline">⟳</button>
-      <button id="right">▶</button>
-      <button id="down">▼</button>
+
+  <!-- ================= MAIN MENU ================= -->
+  <section id="screen-menu" class="screen active">
+    <h1 id="logo">🐍 <span>SNAKE</span></h1>
+    <p class="subtitle">Three levels. One tail. Don't bite yourself.</p>
+    <div class="menu-buttons">
+      <button class="btn" id="btn-play">Play</button>
+      <button class="btn secondary" id="btn-howto">How to Play</button>
     </div>
-    <div id="hint">Arrow keys / WASD to move. Space to pause.</div>
-  </div>
+    <div id="sound-toggle">
+      <button id="btn-mute" aria-label="Toggle sound">🔊</button>
+      <span id="mute-label">Theme song playing</span>
+    </div>
+  </section>
+
+  <!-- ================= ONBOARDING ================= -->
+  <section id="screen-onboarding" class="screen">
+    <div class="onboard-card" id="onboard-card">
+      <div class="onboard-icon" id="onboard-icon">🐍</div>
+      <h2 id="onboard-title"></h2>
+      <p id="onboard-text"></p>
+    </div>
+    <div class="onboard-dots" id="onboard-dots"></div>
+    <div class="onboard-nav">
+      <button class="btn secondary" id="btn-onboard-back">Back</button>
+      <button class="btn secondary" id="btn-onboard-skip">Skip</button>
+      <button class="btn" id="btn-onboard-next">Next</button>
+    </div>
+  </section>
+
+  <!-- ================= LEVEL SELECT ================= -->
+  <section id="screen-levels" class="screen">
+    <h1 id="logo2" style="font-size:1.4rem;">Choose a Level</h1>
+    <div id="level-list"></div>
+    <button class="btn secondary small" id="btn-levels-back">Back to Menu</button>
+  </section>
+
+  <!-- ================= GAME ================= -->
+  <section id="screen-game" class="screen">
+    <div id="hud">
+      <div class="stat">Level: <span id="hud-level">1</span></div>
+      <div class="stat">Score: <span id="hud-score">0</span></div>
+      <div class="stat">Best: <span id="hud-best">0</span></div>
+    </div>
+    <div id="board-wrap">
+      <canvas id="board" width="400" height="400"></canvas>
+      <div class="overlay" id="overlay-pause">
+        <h2>Paused</h2>
+        <p>Press Space or tap Resume to continue.</p>
+        <button class="btn small" id="btn-resume">Resume</button>
+      </div>
+      <div class="overlay" id="overlay-gameover">
+        <h2>Game Over</h2>
+        <p id="gameover-text"></p>
+        <div style="display:flex; gap:8px;">
+          <button class="btn small" id="btn-retry">Retry</button>
+          <button class="btn secondary small" id="btn-gameover-menu">Levels</button>
+        </div>
+      </div>
+      <div class="overlay" id="overlay-levelcomplete">
+        <h2>🎉 Level Complete!</h2>
+        <p id="levelcomplete-text"></p>
+        <div style="display:flex; gap:8px;">
+          <button class="btn small" id="btn-next-level">Next Level</button>
+          <button class="btn secondary small" id="btn-levelcomplete-menu">Levels</button>
+        </div>
+      </div>
+    </div>
+    <div id="controls">
+      <div class="dpad">
+        <button id="up">▲</button>
+        <button id="left">◀</button>
+        <button id="pause-inline">⏸</button>
+        <button id="right">▶</button>
+        <button id="down">▼</button>
+      </div>
+      <div id="hint">Arrow keys / WASD to move. Space to pause.</div>
+    </div>
+    <div id="game-footer">
+      <button class="btn secondary small" id="btn-game-menu">Back to Levels</button>
+    </div>
+  </section>
 
 <script>
 (function () {
-  const canvas = document.getElementById('board');
-  const ctx = canvas.getContext('2d');
-  const scoreEl = document.getElementById('score');
-  const bestEl = document.getElementById('best');
-  const messageEl = document.getElementById('message');
-  const restartBtn = document.getElementById('restart');
-  const restartInlineBtn = document.getElementById('restart-inline');
+  'use strict';
 
-  const GRID_SIZE = 20;
-  const TILE = canvas.width / GRID_SIZE;
-  const STEP_MS = 120;
+  // ===================================================================
+  // Screen management
+  // ===================================================================
+  const screens = {
+    menu: document.getElementById('screen-menu'),
+    onboarding: document.getElementById('screen-onboarding'),
+    levels: document.getElementById('screen-levels'),
+    game: document.getElementById('screen-game'),
+  };
 
-  let snake, direction, nextDirection, food, score, best, gameOver, paused, timerId;
-
-  const BEST_KEY = 'snake_best_score';
-
-  function loadBest() {
-    const stored = parseInt(localStorage.getItem(BEST_KEY), 10);
-    return Number.isFinite(stored) ? stored : 0;
+  function showScreen(name) {
+    Object.values(screens).forEach(s => s.classList.remove('active'));
+    screens[name].classList.add('active');
+    if (name === 'menu') {
+      startTheme();
+    } else {
+      stopTheme();
+    }
   }
 
-  function saveBest(value) {
-    localStorage.setItem(BEST_KEY, String(value));
+  // ===================================================================
+  // Theme song (procedural chiptune via Web Audio API)
+  // ===================================================================
+  const MUTE_KEY = 'snake_muted';
+  let audioCtx = null;
+  let muted = localStorage.getItem(MUTE_KEY) === '1';
+  let themeTimer = null;
+  let themeStep = 0;
+
+  const NOTE_FREQ = {
+    C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00,
+    A4: 440.00, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25,
+    G3: 196.00, A3: 220.00, B3: 246.94,
+  };
+
+  // Simple upbeat 16-step chiptune loop (melody + bass on alternating steps)
+  const THEME_MELODY = [
+    'E5','G4','E5','C5', 'D5','G4','D5','B4',
+    'C5','E4','C5','A4', 'B4','G4','G4',null,
+  ];
+  const THEME_STEP_MS = 165;
+
+  function getAudioCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioCtx;
+  }
+
+  function playNote(freq, duration, volume, type) {
+    if (muted || !freq) return;
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type || 'square';
+    osc.frequency.value = freq;
+    const now = ctx.currentTime;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(volume, now + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + duration + 0.02);
+  }
+
+  function themeTick() {
+    const note = THEME_MELODY[themeStep % THEME_MELODY.length];
+    if (note) {
+      playNote(NOTE_FREQ[note], THEME_STEP_MS / 1000 * 0.9, 0.07, 'square');
+      // light bass pulse every 4 steps
+      if (themeStep % 4 === 0) {
+        playNote(NOTE_FREQ.C4 / 2, THEME_STEP_MS / 1000 * 1.6, 0.05, 'triangle');
+      }
+    }
+    themeStep++;
+  }
+
+  function startTheme() {
+    if (themeTimer) return;
+    themeStep = 0;
+    themeTimer = setInterval(themeTick, THEME_STEP_MS);
+  }
+
+  function stopTheme() {
+    if (themeTimer) {
+      clearInterval(themeTimer);
+      themeTimer = null;
+    }
+  }
+
+  function playSfx(kind) {
+    if (muted) return;
+    if (kind === 'eat') playNote(880, 0.09, 0.09, 'square');
+    if (kind === 'gameover') {
+      playNote(220, 0.25, 0.1, 'sawtooth');
+      setTimeout(() => playNote(140, 0.35, 0.1, 'sawtooth'), 140);
+    }
+    if (kind === 'levelup') {
+      [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+        setTimeout(() => playNote(f, 0.18, 0.09, 'square'), i * 90);
+      });
+    }
+  }
+
+  const muteBtn = document.getElementById('btn-mute');
+  const muteLabel = document.getElementById('mute-label');
+
+  function updateMuteUI() {
+    muteBtn.textContent = muted ? '🔇' : '🔊';
+    muteLabel.textContent = muted ? 'Theme song muted' : 'Theme song playing';
+  }
+  updateMuteUI();
+
+  muteBtn.addEventListener('click', () => {
+    muted = !muted;
+    localStorage.setItem(MUTE_KEY, muted ? '1' : '0');
+    updateMuteUI();
+    if (!muted) getAudioCtx().resume();
+  });
+
+  // Browsers require a user gesture before audio can play; resume ctx on first interaction.
+  function unlockAudioOnce() {
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    document.removeEventListener('pointerdown', unlockAudioOnce);
+    document.removeEventListener('keydown', unlockAudioOnce);
+  }
+  document.addEventListener('pointerdown', unlockAudioOnce);
+  document.addEventListener('keydown', unlockAudioOnce);
+
+  // ===================================================================
+  // Onboarding flow
+  // ===================================================================
+  const ONBOARDED_KEY = 'snake_onboarded';
+  const ONBOARD_STEPS = [
+    {
+      icon: '🐍',
+      title: 'Welcome to Snake!',
+      text: 'Guide your snake around the board, eat food, and grow as long as you can without crashing.',
+    },
+    {
+      icon: '🕹️',
+      title: 'Controls',
+      text: 'Use Arrow keys or WASD on desktop, or the on-screen D-pad on touch devices. Space bar pauses the game.',
+    },
+    {
+      icon: '🍎',
+      title: 'Eat & Grow',
+      text: 'Each piece of food adds to your score and makes your tail longer. Watch out — a longer tail is easier to run into!',
+    },
+    {
+      icon: '🧱',
+      title: 'Avoid Walls & Obstacles',
+      text: 'Crashing into the outer walls, obstacles, or your own tail ends the run. Some levels add extra obstacles to dodge.',
+    },
+    {
+      icon: '🏆',
+      title: '3 Levels to Master',
+      text: 'Reach the target score to clear a level and unlock the next, faster and trickier one. Good luck!',
+    },
+  ];
+  let onboardIndex = 0;
+  let onboardReturnTo = 'menu';
+
+  const onboardIcon = document.getElementById('onboard-icon');
+  const onboardTitle = document.getElementById('onboard-title');
+  const onboardText = document.getElementById('onboard-text');
+  const onboardDots = document.getElementById('onboard-dots');
+  const btnOnboardBack = document.getElementById('btn-onboard-back');
+  const btnOnboardNext = document.getElementById('btn-onboard-next');
+  const btnOnboardSkip = document.getElementById('btn-onboard-skip');
+
+  function renderOnboard() {
+    const step = ONBOARD_STEPS[onboardIndex];
+    onboardIcon.textContent = step.icon;
+    onboardTitle.textContent = step.title;
+    onboardText.textContent = step.text;
+    onboardDots.innerHTML = '';
+    ONBOARD_STEPS.forEach((_, i) => {
+      const dot = document.createElement('span');
+      if (i === onboardIndex) dot.classList.add('active');
+      onboardDots.appendChild(dot);
+    });
+    btnOnboardBack.disabled = onboardIndex === 0;
+    btnOnboardNext.textContent = onboardIndex === ONBOARD_STEPS.length - 1 ? 'Start Playing' : 'Next';
+  }
+
+  function openOnboarding(returnTo) {
+    onboardIndex = 0;
+    onboardReturnTo = returnTo || 'menu';
+    renderOnboard();
+    showScreen('onboarding');
+  }
+
+  btnOnboardNext.addEventListener('click', () => {
+    if (onboardIndex === ONBOARD_STEPS.length - 1) {
+      localStorage.setItem(ONBOARDED_KEY, '1');
+      if (onboardReturnTo === 'levels') {
+        renderLevelList();
+        showScreen('levels');
+      } else {
+        showScreen('menu');
+      }
+      return;
+    }
+    onboardIndex++;
+    renderOnboard();
+  });
+
+  btnOnboardBack.addEventListener('click', () => {
+    if (onboardIndex > 0) {
+      onboardIndex--;
+      renderOnboard();
+    }
+  });
+
+  btnOnboardSkip.addEventListener('click', () => {
+    localStorage.setItem(ONBOARDED_KEY, '1');
+    showScreen(onboardReturnTo === 'levels' ? 'levels' : 'menu');
+  });
+
+  document.getElementById('btn-howto').addEventListener('click', () => openOnboarding('menu'));
+
+  document.getElementById('btn-play').addEventListener('click', () => {
+    if (!localStorage.getItem(ONBOARDED_KEY)) {
+      openOnboarding('levels');
+    } else {
+      renderLevelList();
+      showScreen('levels');
+    }
+  });
+
+  document.getElementById('btn-levels-back').addEventListener('click', () => showScreen('menu'));
+
+  // ===================================================================
+  // Levels definition
+  // ===================================================================
+  const LEVELS = [
+    {
+      id: 1,
+      name: 'Garden',
+      desc: 'Classic rules, open field. A gentle start.',
+      color: '#2e7d32',
+      glow: 'rgba(46, 125, 50, 0.45)',
+      accent: '#7be07b',
+      gridSize: 20,
+      stepMs: 140,
+      target: 50,
+      obstacles: [],
+    },
+    {
+      id: 2,
+      name: 'Maze',
+      desc: 'Stone blocks split the field. Plan your route.',
+      color: '#b8860b',
+      glow: 'rgba(184, 134, 11, 0.45)',
+      accent: '#f2c14e',
+      gridSize: 20,
+      stepMs: 115,
+      target: 90,
+      obstacles: buildMazeObstacles(),
+    },
+    {
+      id: 3,
+      name: 'Storm',
+      desc: 'Fast pace, tight corridors. For snake masters.',
+      color: '#8e2447',
+      glow: 'rgba(230, 57, 70, 0.5)',
+      accent: '#e63946',
+      gridSize: 22,
+      stepMs: 90,
+      target: 140,
+      obstacles: buildStormObstacles(),
+    },
+  ];
+
+  function buildMazeObstacles() {
+    const obs = [];
+    // Two horizontal bars with gaps
+    for (let x = 3; x <= 8; x++) obs.push({ x, y: 6 });
+    for (let x = 11; x <= 16; x++) obs.push({ x, y: 6 });
+    for (let x = 3; x <= 8; x++) obs.push({ x, y: 13 });
+    for (let x = 11; x <= 16; x++) obs.push({ x, y: 13 });
+    return obs;
+  }
+
+  function buildStormObstacles() {
+    const obs = [];
+    // Cross-shaped pillars plus a border of inner pillars
+    for (let y = 4; y <= 17; y += 4) {
+      for (let x = 4; x <= 17; x += 4) {
+        obs.push({ x, y });
+        obs.push({ x: x + 1, y });
+      }
+    }
+    return obs;
+  }
+
+  const BEST_KEY = 'snake_best_scores'; // JSON map levelId -> best
+  const UNLOCK_KEY = 'snake_unlocked_level'; // highest unlocked level id
+
+  function loadBests() {
+    try {
+      return JSON.parse(localStorage.getItem(BEST_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+  function saveBest(levelId, score) {
+    const bests = loadBests();
+    if (!bests[levelId] || score > bests[levelId]) {
+      bests[levelId] = score;
+      localStorage.setItem(BEST_KEY, JSON.stringify(bests));
+    }
+  }
+  function getUnlockedLevel() {
+    const stored = parseInt(localStorage.getItem(UNLOCK_KEY), 10);
+    return Number.isFinite(stored) ? stored : 1;
+  }
+  function unlockLevel(id) {
+    const current = getUnlockedLevel();
+    if (id > current) localStorage.setItem(UNLOCK_KEY, String(id));
+  }
+
+  const levelListEl = document.getElementById('level-list');
+
+  function renderLevelList() {
+    const bests = loadBests();
+    const unlocked = getUnlockedLevel();
+    levelListEl.innerHTML = '';
+    LEVELS.forEach(level => {
+      const isLocked = level.id > unlocked;
+      const card = document.createElement('div');
+      card.className = 'level-card' + (isLocked ? ' locked' : '');
+      card.innerHTML = `
+        <div class="level-swatch" style="background:${level.color};"></div>
+        <div class="level-info">
+          <div class="name">Level ${level.id}: ${level.name}</div>
+          <div class="desc">${level.desc}</div>
+          <div class="best">${bests[level.id] ? 'Best: ' + bests[level.id] : 'Target: ' + level.target + ' pts'}</div>
+        </div>
+        <div class="level-lock">${isLocked ? '🔒' : '▶'}</div>
+      `;
+      if (!isLocked) {
+        card.addEventListener('click', () => startLevel(level.id));
+      }
+      levelListEl.appendChild(card);
+    });
+  }
+
+  document.getElementById('btn-levels-back').addEventListener('click', () => showScreen('menu'));
+
+  // ===================================================================
+  // Game engine
+  // ===================================================================
+  const canvas = document.getElementById('board');
+  const ctx = canvas.getContext('2d');
+  const hudLevel = document.getElementById('hud-level');
+  const hudScore = document.getElementById('hud-score');
+  const hudBest = document.getElementById('hud-best');
+  const boardWrap = document.getElementById('board-wrap');
+
+  const overlayPause = document.getElementById('overlay-pause');
+  const overlayGameOver = document.getElementById('overlay-gameover');
+  const overlayLevelComplete = document.getElementById('overlay-levelcomplete');
+  const gameoverText = document.getElementById('gameover-text');
+  const levelcompleteText = document.getElementById('levelcomplete-text');
+
+  let currentLevel = LEVELS[0];
+  let GRID_SIZE, TILE, STEP_MS;
+  let snake, direction, nextDirection, food, score, best, gameOver, paused, timerId, levelCleared;
+
+  function startLevel(levelId) {
+    currentLevel = LEVELS.find(l => l.id === levelId) || LEVELS[0];
+    GRID_SIZE = currentLevel.gridSize;
+    TILE = canvas.width / GRID_SIZE;
+    STEP_MS = currentLevel.stepMs;
+    canvas.style.setProperty('--level-color', currentLevel.color);
+    canvas.style.setProperty('--level-glow', currentLevel.glow);
+    boardWrap.style.setProperty('--level-color', currentLevel.color);
+    boardWrap.style.setProperty('--level-glow', currentLevel.glow);
+    hudLevel.textContent = currentLevel.id + ' - ' + currentLevel.name;
+    hudBest.textContent = loadBests()[currentLevel.id] || 0;
+    showScreen('game');
+    resetGame();
+  }
+
+  function isObstacle(x, y) {
+    return currentLevel.obstacles.some(o => o.x === x && o.y === y);
   }
 
   function randomFood() {
     let pos;
+    let attempts = 0;
     do {
       pos = {
         x: Math.floor(Math.random() * GRID_SIZE),
         y: Math.floor(Math.random() * GRID_SIZE),
       };
-    } while (snake.some(seg => seg.x === pos.x && seg.y === pos.y));
+      attempts++;
+    } while (
+      attempts < 500 &&
+      (snake.some(seg => seg.x === pos.x && seg.y === pos.y) || isObstacle(pos.x, pos.y))
+    );
     return pos;
   }
 
   function resetGame() {
+    const startX = Math.floor(GRID_SIZE / 2);
+    const startY = Math.floor(GRID_SIZE / 2);
     snake = [
-      { x: 9, y: 10 },
-      { x: 8, y: 10 },
-      { x: 7, y: 10 },
+      { x: startX, y: startY },
+      { x: startX - 1, y: startY },
+      { x: startX - 2, y: startY },
     ];
     direction = { x: 1, y: 0 };
     nextDirection = { x: 1, y: 0 };
     score = 0;
     gameOver = false;
     paused = false;
-    best = loadBest();
+    levelCleared = false;
+    best = (loadBests()[currentLevel.id]) || 0;
     food = randomFood();
-    scoreEl.textContent = score;
-    bestEl.textContent = best;
-    messageEl.textContent = '';
+    hudScore.textContent = score;
+    hudBest.textContent = best;
+    overlayPause.classList.remove('active');
+    overlayGameOver.classList.remove('active');
+    overlayLevelComplete.classList.remove('active');
     if (timerId) clearInterval(timerId);
     timerId = setInterval(tick, STEP_MS);
+    draw();
   }
 
   function endGame() {
     gameOver = true;
     clearInterval(timerId);
-    if (score > best) {
-      best = score;
-      saveBest(best);
-      bestEl.textContent = best;
-      messageEl.textContent = `Game over! New best score: ${best}. Press Restart to play again.`;
+    playSfx('gameover');
+    saveBest(currentLevel.id, score);
+    const newBest = loadBests()[currentLevel.id];
+    best = newBest;
+    hudBest.textContent = best;
+    gameoverText.textContent = score >= newBest && score > 0
+      ? `New best on ${currentLevel.name}: ${score}!`
+      : `Score: ${score}. Best: ${best}.`;
+    overlayGameOver.classList.add('active');
+  }
+
+  function completeLevel() {
+    levelCleared = true;
+    clearInterval(timerId);
+    playSfx('levelup');
+    saveBest(currentLevel.id, score);
+    hudBest.textContent = loadBests()[currentLevel.id];
+    const nextLevel = LEVELS.find(l => l.id === currentLevel.id + 1);
+    if (nextLevel) {
+      unlockLevel(nextLevel.id);
+      levelcompleteText.textContent = `You cleared ${currentLevel.name} with ${score} points! Level ${nextLevel.id} - ${nextLevel.name} is unlocked.`;
+      document.getElementById('btn-next-level').style.display = '';
     } else {
-      messageEl.textContent = `Game over! Score: ${score}. Press Restart to play again.`;
+      levelcompleteText.textContent = `You cleared ${currentLevel.name} with ${score} points! That was the final level — nice work!`;
+      document.getElementById('btn-next-level').style.display = 'none';
     }
+    overlayLevelComplete.classList.add('active');
   }
 
   function tick() {
-    if (paused || gameOver) return;
+    if (paused || gameOver || levelCleared) return;
 
     direction = nextDirection;
     const head = {
@@ -202,6 +807,7 @@
     if (
       head.x < 0 || head.x >= GRID_SIZE ||
       head.y < 0 || head.y >= GRID_SIZE ||
+      isObstacle(head.x, head.y) ||
       snake.some(seg => seg.x === head.x && seg.y === head.y)
     ) {
       endGame();
@@ -213,7 +819,13 @@
 
     if (head.x === food.x && head.y === food.y) {
       score += 10;
-      scoreEl.textContent = score;
+      hudScore.textContent = score;
+      playSfx('eat');
+      if (score >= currentLevel.target) {
+        draw();
+        completeLevel();
+        return;
+      }
       food = randomFood();
     } else {
       snake.pop();
@@ -226,38 +838,42 @@
     ctx.fillStyle = '#0a0e12';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Obstacles
+    ctx.fillStyle = '#4a4a52';
+    currentLevel.obstacles.forEach(o => {
+      ctx.fillRect(o.x * TILE + 1, o.y * TILE + 1, TILE - 2, TILE - 2);
+    });
+
+    // Food
     ctx.fillStyle = '#e63946';
     ctx.fillRect(food.x * TILE, food.y * TILE, TILE, TILE);
 
+    // Snake
     snake.forEach((seg, i) => {
-      ctx.fillStyle = i === 0 ? '#7be07b' : '#2e7d32';
+      ctx.fillStyle = i === 0 ? currentLevel.accent : currentLevel.color;
       ctx.fillRect(seg.x * TILE + 1, seg.y * TILE + 1, TILE - 2, TILE - 2);
     });
 
     if (paused && !gameOver) {
-      ctx.fillStyle = 'rgba(0,0,0,0.5)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#f2c14e';
-      ctx.font = '24px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+      // pause overlay handled via DOM
     }
   }
 
   function setDirection(x, y) {
-    if (gameOver) return;
+    if (gameOver || levelCleared) return;
     if (direction.x === -x && direction.y === -y) return;
     if (direction.x === x && direction.y === y && (nextDirection.x !== x || nextDirection.y !== y)) return;
     nextDirection = { x, y };
   }
 
   function togglePause() {
-    if (gameOver) return;
+    if (gameOver || levelCleared) return;
     paused = !paused;
-    draw();
+    overlayPause.classList.toggle('active', paused);
   }
 
   document.addEventListener('keydown', (e) => {
+    if (!screens.game.classList.contains('active')) return;
     switch (e.key) {
       case 'ArrowUp': case 'w': case 'W': setDirection(0, -1); e.preventDefault(); break;
       case 'ArrowDown': case 's': case 'S': setDirection(0, 1); e.preventDefault(); break;
@@ -271,12 +887,33 @@
   document.getElementById('down').addEventListener('click', () => setDirection(0, 1));
   document.getElementById('left').addEventListener('click', () => setDirection(-1, 0));
   document.getElementById('right').addEventListener('click', () => setDirection(1, 0));
+  document.getElementById('pause-inline').addEventListener('click', togglePause);
+  document.getElementById('btn-resume').addEventListener('click', togglePause);
 
-  restartBtn.addEventListener('click', resetGame);
-  restartInlineBtn.addEventListener('click', resetGame);
+  document.getElementById('btn-retry').addEventListener('click', resetGame);
+  document.getElementById('btn-gameover-menu').addEventListener('click', () => {
+    renderLevelList();
+    showScreen('levels');
+  });
+  document.getElementById('btn-next-level').addEventListener('click', () => {
+    const nextLevel = LEVELS.find(l => l.id === currentLevel.id + 1);
+    if (nextLevel) startLevel(nextLevel.id);
+  });
+  document.getElementById('btn-levelcomplete-menu').addEventListener('click', () => {
+    renderLevelList();
+    showScreen('levels');
+  });
+  document.getElementById('btn-game-menu').addEventListener('click', () => {
+    if (timerId) clearInterval(timerId);
+    renderLevelList();
+    showScreen('levels');
+  });
 
-  resetGame();
-  draw();
+  // ===================================================================
+  // Boot
+  // ===================================================================
+  renderLevelList();
+  showScreen('menu');
 })();
 </script>
 </body>
