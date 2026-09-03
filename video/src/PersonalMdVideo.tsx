@@ -7,7 +7,7 @@ import { theme } from './theme';
 
 export const VIDEO_FPS = 30;
 
-export const SCENE_DURATION = 150; // 5s per scene
+export const SCENE_DURATION = 90; // 3s per scene
 export const SCENE_COUNT = 4;
 export const TOTAL_DURATION = SCENE_DURATION * SCENE_COUNT;
 

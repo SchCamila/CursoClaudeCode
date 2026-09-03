@@ -10,7 +10,7 @@ export const Scene1Intro: React.FC = () => {
 
   const chars = Math.min(
     FULL_TEXT.length,
-    Math.floor(interpolate(frame, [10, 45], [0, FULL_TEXT.length], {
+    Math.floor(interpolate(frame, [6, 28], [0, FULL_TEXT.length], {
       extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp',
     }))
@@ -18,7 +18,7 @@ export const Scene1Intro: React.FC = () => {
   const typed = FULL_TEXT.slice(0, chars);
   const cursorOn = Math.floor(frame / 8) % 2 === 0;
 
-  const subtitleOpacity = spring({ frame: frame - 55, fps, config: { damping: 200 } });
+  const subtitleOpacity = spring({ frame: frame - 34, fps, config: { damping: 200 } });
   const subtitleY = interpolate(subtitleOpacity, [0, 1], [20, 0]);
 
   const badgeScale = spring({ frame: frame - 5, fps, config: { damping: 12, mass: 0.6 } });
@@ -27,20 +27,22 @@ export const Scene1Intro: React.FC = () => {
     <AbsoluteFill style={{ fontFamily: theme.fontFamily }}>
       <GlowBackground />
 
-      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <AbsoluteFill
+        style={{ alignItems: 'center', justifyContent: 'center', padding: '0 64px' }}
+      >
         <div
           style={{
             transform: `scale(${badgeScale})`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 28,
+            gap: 32,
           }}
         >
           <div
             style={{
               fontFamily: theme.mono,
-              fontSize: 96,
+              fontSize: 76,
               fontWeight: 700,
               color: theme.greenLight,
               textShadow: '0 0 40px rgba(123,224,123,0.45)',
@@ -55,9 +57,10 @@ export const Scene1Intro: React.FC = () => {
             style={{
               opacity: subtitleOpacity,
               transform: `translateY(${subtitleY}px)`,
-              fontSize: 34,
+              fontSize: 36,
               color: theme.text,
               textAlign: 'center',
+              maxWidth: 780,
             }}
           >
             Sua memória pessoal dentro do{' '}

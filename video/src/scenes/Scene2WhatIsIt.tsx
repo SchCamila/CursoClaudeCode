@@ -19,18 +19,12 @@ export const Scene2WhatIsIt: React.FC = () => {
     <AbsoluteFill style={{ fontFamily: theme.fontFamily }}>
       <GlowBackground />
 
-      <AbsoluteFill
-        style={{
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          paddingTop: 220,
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 44, width: 1300 }}>
+      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', padding: '0 60px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 36, width: '100%', maxWidth: 900 }}>
           <div
             style={{
               opacity: titleOpacity,
-              fontSize: 52,
+              fontSize: 46,
               fontWeight: 700,
               color: theme.text,
             }}
@@ -38,9 +32,9 @@ export const Scene2WhatIsIt: React.FC = () => {
             O que é o <span style={{ color: theme.greenLight }}>personal.md</span>?
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {POINTS.map((point, i) => {
-              const start = 20 + i * 18;
+              const start = 10 + i * 11;
               const progress = spring({
                 frame: frame - start,
                 fps,
@@ -56,15 +50,15 @@ export const Scene2WhatIsIt: React.FC = () => {
                     transform: `translateX(${x}px)`,
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 22,
+                    gap: 18,
                     background: theme.panel,
                     border: `1px solid ${theme.border}`,
                     borderRadius: 12,
-                    padding: '20px 28px',
+                    padding: '18px 22px',
                   }}
                 >
-                  <div style={{ fontSize: 40 }}>{point.icon}</div>
-                  <div style={{ fontSize: 32, color: theme.text }}>{point.text}</div>
+                  <div style={{ fontSize: 34 }}>{point.icon}</div>
+                  <div style={{ fontSize: 26, color: theme.text }}>{point.text}</div>
                 </div>
               );
             })}

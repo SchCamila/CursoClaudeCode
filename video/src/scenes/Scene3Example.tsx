@@ -24,12 +24,12 @@ export const Scene3Example: React.FC = () => {
     <AbsoluteFill style={{ fontFamily: theme.fontFamily }}>
       <GlowBackground />
 
-      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 28, alignItems: 'center' }}>
+      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', padding: '0 60px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'center', width: '100%' }}>
           <div
             style={{
               opacity: captionOpacity,
-              fontSize: 40,
+              fontSize: 34,
               fontWeight: 700,
               color: theme.text,
             }}
@@ -40,7 +40,8 @@ export const Scene3Example: React.FC = () => {
           <div
             style={{
               transform: `scale(${windowScale})`,
-              width: 1100,
+              width: '100%',
+              maxWidth: 920,
               borderRadius: 14,
               overflow: 'hidden',
               border: `1px solid ${theme.border}`,
@@ -50,25 +51,25 @@ export const Scene3Example: React.FC = () => {
             <div
               style={{
                 background: theme.bgAlt,
-                padding: '14px 20px',
+                padding: '12px 18px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
                 borderBottom: `1px solid ${theme.border}`,
               }}
             >
-              <div style={{ width: 14, height: 14, borderRadius: 7, background: '#e63946' }} />
-              <div style={{ width: 14, height: 14, borderRadius: 7, background: theme.amber }} />
-              <div style={{ width: 14, height: 14, borderRadius: 7, background: theme.greenLight }} />
-              <div style={{ marginLeft: 16, color: theme.textMuted, fontFamily: theme.mono, fontSize: 20 }}>
+              <div style={{ width: 12, height: 12, borderRadius: 6, background: '#e63946' }} />
+              <div style={{ width: 12, height: 12, borderRadius: 6, background: theme.amber }} />
+              <div style={{ width: 12, height: 12, borderRadius: 6, background: theme.greenLight }} />
+              <div style={{ marginLeft: 14, color: theme.textMuted, fontFamily: theme.mono, fontSize: 16 }}>
                 ~/.claude/personal.md
               </div>
             </div>
 
-            <div style={{ background: theme.panel, padding: '32px 36px', minHeight: 340 }}>
+            <div style={{ background: theme.panel, padding: '26px 28px', minHeight: 290 }}>
               {LINES.map((line, i) => {
-                const start = 18 + i * 14;
-                const progress = interpolate(frame, [start, start + 8], [0, 1], {
+                const start = 8 + i * 9;
+                const progress = interpolate(frame, [start, start + 6], [0, 1], {
                   extrapolateLeft: 'clamp',
                   extrapolateRight: 'clamp',
                 });
@@ -79,10 +80,10 @@ export const Scene3Example: React.FC = () => {
                     key={line.text}
                     style={{
                       fontFamily: theme.mono,
-                      fontSize: 26,
+                      fontSize: 21,
                       color: line.color,
                       lineHeight: 1.9,
-                      minHeight: 26 * 1.9,
+                      minHeight: 21 * 1.9,
                     }}
                   >
                     {line.text.slice(0, chars)}
