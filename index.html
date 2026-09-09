@@ -94,6 +94,7 @@ a{ color:var(--brand); text-underline-offset:3px; }
 .money,.mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
 :focus-visible{ outline:none; box-shadow:var(--ring); border-radius:8px; }
 .sr{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+[hidden]{ display:none !important; }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
 }
@@ -193,7 +194,7 @@ svg.ico{ fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:roun
 #v-splash .pad{ flex:1; justify-content:center; align-items:center; text-align:center; gap:18px; padding:34px 26px; }
 #v-splash .mark{ width:84px; height:84px; }
 #v-splash h1{ font-size:1.9rem; letter-spacing:-.02em; }
-.claim{ font-family:var(--serif); font-size:1.1rem; color:var(--brand); max-width:19ch; line-height:1.35; }
+.claim{ font-family:var(--serif); font-size:1.1rem; color:var(--brand); max-width:23ch; line-height:1.35; }
 .props{ display:flex; flex-direction:column; gap:11px; text-align:left; width:100%; margin-top:2px; }
 .prop{ display:flex; gap:10px; align-items:flex-start; font-size:.92rem; line-height:1.4; }
 .prop i{ flex:none; width:21px; height:21px; border-radius:999px; background:var(--brand-soft); display:grid; place-items:center; margin-top:1px; }
@@ -351,7 +352,6 @@ svg.ico{ fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:roun
   box-shadow:0 6px 18px rgba(18,33,28,.24); cursor:pointer; display:grid; place-items:center; z-index:12;
 }
 .fab svg{ width:24px; height:24px; stroke:var(--on-brand); stroke-width:2.4; }
-.fab[hidden]{ display:none; }
 
 /* ============================================================
    11. DIREITOS
